@@ -35,7 +35,7 @@ than the number of newlines.
 
    var fs = require('fs')
    var buf = fs.readFileSync(process.argv[2])
-   console.log(buf)
+   //console.log(buf)
    var str = buf.toString()
    console.log(str)
    
