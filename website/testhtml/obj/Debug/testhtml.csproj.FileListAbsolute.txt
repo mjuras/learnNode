@@ -1,0 +1,6 @@
+C:\project\learnNode\website\testhtml\bin\testhtml.dll.config
+C:\project\learnNode\website\testhtml\bin\testhtml.dll
+C:\project\learnNode\website\testhtml\bin\testhtml.pdb
+C:\project\learnNode\website\testhtml\obj\Debug\testhtml.dll
+C:\project\learnNode\website\testhtml\obj\Debug\testhtml.pdb
+C:\project\learnNode\website\testhtml\obj\Debug\testhtml.csprojResolveAssemblyReference.cache
