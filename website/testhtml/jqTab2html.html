@@ -1,0 +1,230 @@
+<style>
+    .responstable {
+        margin: 1em 0;
+        width: 100%;
+        overflow: hidden;
+        background: #FFF;
+        color: #024457;
+        border-radius: 10px;
+        border: 1px solid #167F92;
+    }
+
+        .responstable tr {
+            border: 1px solid #D9E4E6;
+        }
+
+            .responstable tr:nth-child(odd) {
+                background-color: #EAF3F3;
+            }
+
+        .responstable th {
+            display: none;
+            border: 1px solid #FFF;
+            background-color: #167F92;
+            color: #FFF;
+            padding: 1em;
+        }
+
+            .responstable th:first-child {
+                display: table-cell;
+                text-align: center;
+            }
+
+            .responstable th:nth-child(2) {
+                display: table-cell;
+            }
+
+                .responstable th:nth-child(2) span {
+                    display: none;
+                }
+
+                .responstable th:nth-child(2):after {
+                    content: attr(data-th);
+                }
+
+    @media (min-width: 480px) {
+        .responstable th:nth-child(2) span {
+            display: block;
+        }
+
+        .responstable th:nth-child(2):after {
+            display: none;
+        }
+    }
+
+    .responstable td {
+        display: block;
+        word-wrap: break-word;
+        max-width: 7em;
+    }
+
+        .responstable td:first-child {
+            display: table-cell;
+            text-align: center;
+            border-right: 1px solid #D9E4E6;
+        }
+
+    @media (min-width: 480px) {
+        .responstable td {
+            border: 1px solid #D9E4E6;
+        }
+    }
+
+    .responstable th, .responstable td {
+        text-align: left;
+        margin: .5em 1em;
+    }
+
+    @media (min-width: 480px) {
+        .responstable th, .responstable td {
+            display: table-cell;
+            padding: 1em;
+        }
+    }
+
+    body {
+        padding: 0 2em;
+        font-family: Arial, sans-serif;
+        color: #024457;
+        background: #f2f2f2;
+    }
+
+    h1 {
+        font-family: Verdana;
+        font-weight: normal;
+        color: #024457;
+    }
+
+        h1 span {
+            color: #167F92;
+        }
+
+/* progress bar container */
+    #progressbar{
+        border:1px solid black;
+        width:200px;
+        height:20px;
+        position:relative;
+        color:black; 
+    }
+    /* color bar */
+    #progressbar div.progress{
+        position:absolute;
+        width:0;
+        height:100%;
+        overflow:hidden;
+        background-color:#369;
+    }
+    /* text on bar */
+    #progressbar div.progress .text{
+        position:absolute;
+        text-align:center;
+        color:white;
+    }
+    /* text off bar */
+    #progressbar div.text{
+        position:absolute;
+        width:100%;
+        height:100%;
+        text-align:center;
+    }
+</style>
+<html>
+<head
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <title>Tab File To HTML</title>
+        <script>
+
+    var openFile = function (event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function () {
+            var text = reader.result;
+            var node = document.getElementById('output');
+            node.innerHTML = formatText(text);
+        };
+        reader.readAsText(input.files[0]);
+    };
+
+    function formatText(text) {
+        var dataArr = text.split('\n');
+        var table = "<table class='responstable'>";
+        for (var i = 0; i < dataArr.length; i++) {
+
+            //http://jsfiddle.net/6V4Xp/12/
+
+            (function (curProgress) {
+                window.setTimeout(function () {
+                    $('#progressbar').reportprogress(curProgress);
+                }, 100);
+            })((i / dataArr.length) * 100);
+
+            table = table + "<tr>";
+            var fieldArr = dataArr[i].split('\t');
+            for (var f = 0; f < fieldArr.length; f++) {
+                if (i == 0) table = table + "<th>" + fieldArr[f] + "</th>";
+                else table = table + "<td>" + fieldArr[f] + "</td>";
+            }
+            table = table + "</tr>";
+        }
+        table = table + "</table>";
+        return table;
+    }
+    function run() {
+        var x = 100,
+            y = 100,
+            z = 10,
+            count = 0;
+        for (var i = 0; i < x; i++) {
+            for (var j = 0; j < y; j++) {
+                for (var k = 0; k < z; k++) {
+                    (function (x, y, z, count) {
+                        window.setTimeout(function () {
+                            $('#progressbar').reportprogress((100 * (count)) / (x * y * z));
+                        }, 2000);
+                    })(x, y, z, ++count);
+                }
+            }
+        }
+    }
+(function ($) {
+        //Main Method
+        $.fn.reportprogress = function (val, maxVal) {
+            var max = 100;
+            if (maxVal)
+                max = maxVal;
+            return this.each(
+                function () {
+                    var div = $(this);
+                    var innerdiv = div.find(".progress");
+
+                    if (innerdiv.length != 1) {
+                        innerdiv = $("<div class='progress'></div>");
+                        div.append("<div class='text'>&nbsp;</div>");
+                        $("<span class='text'>&nbsp;</span>").css("width", div.width()).appendTo(innerdiv);
+                        div.append(innerdiv);
+                    }
+                    var width = Math.round(val / max * 100);
+                    innerdiv.css("width", width + "%");
+                    div.find(".text").html(width + " %");
+                }
+            );
+        };
+    })(jQuery);
+        </script>
+    </head>
+<body>
+    <input type='file' accept='.tab,.txt' width="400" onchange='openFile(event)'><br />
+    <div id="progressbar"></div>
+    <div id='output'>
+        ...
+    </div>
+    <input type='button' value='start' onclick='run()' />
+    <p />
+
+    
+</body>
+</html>

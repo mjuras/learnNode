@@ -1,0 +1,150 @@
+<html>
+<style>
+.responstable {
+  margin: 1em 0;
+  width: 100%;
+  overflow: hidden;
+  background: #FFF;
+  color: #024457;
+  border-radius: 10px;
+  border: 1px solid #167F92;
+}
+.responstable tr {
+  border: 1px solid #D9E4E6;
+}
+.responstable tr:nth-child(odd) {
+  background-color: #EAF3F3;
+}
+.responstable th {
+  display: none;
+  border: 1px solid #FFF;
+  background-color: #167F92;
+  color: #FFF;
+  padding: 1em;
+}
+.responstable th:first-child {
+  display: table-cell;
+  text-align: center;
+}
+.responstable th:nth-child(2) {
+  display: table-cell;
+}
+.responstable th:nth-child(2) span {
+  display: none;
+}
+.responstable th:nth-child(2):after {
+  content: attr(data-th);
+}
+@media (min-width: 480px) {
+  .responstable th:nth-child(2) span {
+    display: block;
+  }
+  .responstable th:nth-child(2):after {
+    display: none;
+  }
+}
+.responstable td {
+  display: block;
+  word-wrap: break-word;
+  max-width: 7em;
+}
+.responstable td:first-child {
+  display: table-cell;
+  text-align: center;
+  border-right: 1px solid #D9E4E6;
+}
+@media (min-width: 480px) {
+  .responstable td {
+    border: 1px solid #D9E4E6;
+  }
+}
+.responstable th, .responstable td {
+  text-align: left;
+  margin: .5em 1em;
+}
+@media (min-width: 480px) {
+  .responstable th, .responstable td {
+    display: table-cell;
+    padding: 1em;
+  }
+}
+
+body {
+  padding: 0 2em;
+  font-family: Arial, sans-serif;
+  color: #024457;
+  background: #f2f2f2;
+}
+
+h1 {
+  font-family: Verdana;
+  font-weight: normal;
+  color: #024457;
+}
+h1 span {
+  color: #167F92;
+}
+#myProgress {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  background-color: #ddd;
+}
+
+#myBar {
+  position: absolute;
+  width: 0%;
+  height: 100%;
+  background-color: #4CAF50;
+}
+
+</Style>
+    <head>
+    <script>
+      var openFile = function(event) 
+      {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function()
+        {
+          var text = reader.result;
+          var node = document.getElementById('output');
+          node.innerHTML = formatText(text);
+        };
+        reader.readAsText(input.files[0]);
+      };
+      
+      function formatText(text)
+      {
+            var bar = document.getElementById('myBar');
+            var dataArr = text.split('\n');
+            var maxProgress = dataArr.length;
+            var table = "<table class='responstable'>";
+            for (var i=0; i< dataArr.length; i++) 
+            {
+                bar.style.width = (i/maxProgress*100)+"%";
+                table = table + "<tr>";
+                var fieldArr = dataArr[i].split('\t');
+                for (var f=0; f< fieldArr.length; f++) 
+                {
+                    if (i==0) table = table + "<th>"+ fieldArr[f]+"</th>"; 
+                    else table = table + "<td>"+ fieldArr[f]+"</td>"; 
+                }
+                table = table + "</tr>";
+            }
+            table = table + "</table>";
+            return table;
+        }
+    </script>
+    </head>
+    <body>
+    <input type='file' accept='.tab,.txt' onchange='openFile(event)'><br>
+    <div id="myProgress">
+        <div id="myBar"></div>
+    </div>
+    <div id='output'>
+    ...
+    </div>
+    <p/>
+    </body>
+    </html>
